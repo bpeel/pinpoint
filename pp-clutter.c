@@ -1603,19 +1603,45 @@ action_slide (ClutterRenderer *renderer)
     }
 }
 
-static char *pp_lookup_transition (const char *transition)
+static char *pp_lookup_transition_in_dirs (const char *const *dirs,
+                                           const char *extra_dir,
+                                           const char *transition)
 {
-  int   i;
-  char *dirs[] ={ "", "./transitions/", PKGDATADIR, NULL};
+  char *filename = g_strconcat (transition, ".json", NULL);
+  char *path = NULL;
+  int i;
 
   for (i = 0; dirs[i]; i++)
     {
-      char *path = g_strdup_printf ("%s%s.json", dirs[i], transition);
+      if (extra_dir)
+        path = g_build_filename (dirs[i], extra_dir, filename, NULL);
+      else
+        path = g_build_filename (dirs[i], filename, NULL);
       if (g_file_test (path, G_FILE_TEST_EXISTS))
-        return path;
+        break;
       g_free (path);
+      path = NULL;
     }
-  return NULL;
+
+  g_free (filename);
+
+  return path;
+}
+
+static char *pp_lookup_transition (const char *transition)
+{
+  const char *dirs[] ={ ".", "transitions", PKGDATADIR, NULL};
+  char *path;
+
+  path = pp_lookup_transition_in_dirs (g_get_system_data_dirs (),
+                                       "pinpoint",
+                                       transition);
+  if (path)
+    return path;
+
+  return pp_lookup_transition_in_dirs (dirs,
+                                       NULL,
+                                       transition);
 }
 
 static void update_commandline_shading (ClutterRenderer *renderer)
