@@ -1735,10 +1735,17 @@ static gboolean update_speaker_screen (ClutterRenderer *renderer)
     return FALSE;
 
   point = pp_slidep->data;
+  static gboolean is_updated = TRUE;
   static float current_slide_time = 0.0;
   static float current_slide_duration = 0.0;
   static GList *current_slide = NULL;
   float nh, nw;
+
+  /* Skip this update since the previous one isn't finished */
+  if (!is_updated)
+    return TRUE;
+
+  is_updated = FALSE;
 
   if (renderer->reset)
     {
@@ -1805,7 +1812,7 @@ static gboolean update_speaker_screen (ClutterRenderer *renderer)
     }
 
   if (!renderer->speaker_mode)
-    return TRUE;
+    goto out;
 
   if (point->speaker_notes)
     clutter_text_set_text (CLUTTER_TEXT (renderer->speaker_notes),
@@ -1971,6 +1978,10 @@ static gboolean update_speaker_screen (ClutterRenderer *renderer)
                               nh * 0.35);
   clutter_actor_set_width    (renderer->speaker_notes,
                               nw * 0.5);
+
+out:
+  is_updated = TRUE;
+
   return TRUE;
 }
 
