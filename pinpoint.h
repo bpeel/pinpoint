@@ -120,6 +120,8 @@ extern gboolean  pp_maximized;
 extern gboolean  pp_speakermode;
 extern gboolean  pp_rehearse;
 extern char     *pp_camera_device;
+extern int       pp_width;
+extern int       pp_height;
 
 extern GList         *pp_slides;  /* list of slide text */
 extern GList         *pp_slidep;  /* current slide */

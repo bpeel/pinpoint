@@ -853,6 +853,9 @@ clutter_renderer_init (PinPointRenderer   *pp_renderer,
   renderer->commandline_shading = clutter_rectangle_new_with_color (&black);
   renderer->commandline = clutter_text_new ();
 
+  if (pp_width != -1 && pp_height != -1)
+    clutter_actor_set_size (stage, pp_width, pp_height);
+
   /* Clutter doesn't seem to have a good way to infer which backend it
      is using so we'll try to guess from the name of the backend
      class */

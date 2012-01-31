@@ -98,6 +98,57 @@ gboolean  pp_maximized       = FALSE;
 gboolean  pp_speakermode     = FALSE;
 gboolean  pp_rehearse        = FALSE;
 char     *pp_camera_device   = NULL;
+int       pp_width           = -1; /* unspecified */
+int       pp_height          = -1; /* unspecified */
+
+static gboolean
+pp_parse_size (const char *option_name,
+               const char *value,
+               gpointer data,
+               GError **error)
+{
+  unsigned long width, height;
+  const char *separator;
+  int width_len;
+  char *width_str;
+  char *tail;
+  char tail_value;
+
+  separator = strchr (value, 'x');
+
+  if (separator == NULL)
+    goto bad_value;
+
+  width_len = separator - value;
+  width_str = g_malloc (width_len + 1);
+  memcpy (width_str, value, width_len);
+  width_str[width_len] = '\0';
+
+  width = strtoul (width_str, &tail, 10);
+  while (g_ascii_isspace (*tail))
+    tail++;
+  tail_value = *tail;
+  g_free (width_str);
+
+  if (width < 1 || width > G_MAXINT || tail_value)
+    goto bad_value;
+
+  height = strtoul (separator + 1, &tail, 10);
+  while (g_ascii_isspace (*tail))
+    tail++;
+  if (height < 1 || height > G_MAXINT || *tail)
+    goto bad_value;
+
+  pp_width = width;
+  pp_height = height;
+
+  return TRUE;
+
+ bad_value:
+  g_set_error (error, G_OPTION_ERROR, G_OPTION_ERROR_BAD_VALUE,
+               "Invalid value given for the stage size");
+  return FALSE;
+}
 
 static GOptionEntry entries[] =
 {
@@ -117,6 +168,8 @@ static GOptionEntry entries[] =
 "                                         (formats supported: pdf)", "FILE" },
     { "camera", 'c', 0, G_OPTION_ARG_STRING, &pp_camera_device,
       "Device to use for [camera] background", "DEVICE" },
+    { "size", 'g', 0, G_OPTION_ARG_CALLBACK, &pp_parse_size,
+      "Set size of the stage to WIDTHxHEIGHT", "WIDTHxHEIGHT" },
     { NULL }
 };
 
