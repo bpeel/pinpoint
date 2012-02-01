@@ -432,6 +432,8 @@ _cairo_render_background (CairoRenderer *renderer,
     case PP_BG_CAMERA:
       /* silently ignore camera backgrounds */
       break;
+    case PP_BG_NONE:
+      break;
     default:
       g_assert_not_reached();
     }
