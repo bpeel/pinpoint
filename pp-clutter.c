@@ -2003,10 +2003,10 @@ static gboolean update_speaker_screen (ClutterRenderer *renderer)
                               nw * 0.0,
                               nh * 0.7);
   clutter_actor_set_position (renderer->speaker_notes,
-                              nw * 0.46,
+                              nw * 0.4,
                               nh * 0.35);
   clutter_actor_set_width    (renderer->speaker_notes,
-                              nw * 0.5);
+                              nw * 0.6);
 
 out:
   is_updated = TRUE;
