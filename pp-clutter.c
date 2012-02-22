@@ -895,7 +895,6 @@ clutter_renderer_init (PinPointRenderer   *pp_renderer,
 
   clutter_actor_show (stage);
 
-
   clutter_stage_set_color (CLUTTER_STAGE (stage), &black);
   g_signal_connect (stage, "delete-event",
                     G_CALLBACK (stage_deleted), renderer);
@@ -925,7 +924,7 @@ clutter_renderer_init (PinPointRenderer   *pp_renderer,
   g_signal_connect (renderer->commandline, "notify::width",
                     G_CALLBACK (commandline_notify_cb), renderer);
 
-  clutter_stage_set_user_resizable (CLUTTER_STAGE (stage), TRUE);
+  //  clutter_stage_set_user_resizable (CLUTTER_STAGE (stage), TRUE);
 
   if (pp_fullscreen)
     pp_set_fullscreen (renderer, CLUTTER_STAGE (stage), TRUE);
