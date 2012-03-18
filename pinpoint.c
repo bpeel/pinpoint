@@ -789,7 +789,6 @@ pp_parse_slides (PinPointRenderer *renderer,
             close_last_slide:
             if (startofline)
               {
-                startofline = FALSE;
                 next_point = pin_point_new (renderer);
 
                 g_string_assign (setting_str, "");
