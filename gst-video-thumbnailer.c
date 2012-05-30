@@ -177,6 +177,9 @@ gst_video_thumbnailer_get_shot (const gchar  *location,
     GdkPixbuf *shot = NULL;
     int count = 0;
     gchar *uri = g_strconcat ("file://", location, NULL);
+    GMainContext *context = g_main_context_new ();
+
+    g_main_context_push_thread_default  (context);
 
     playbin = gst_element_factory_make ("playbin", "playbin");
     audio_sink = gst_element_factory_make ("fakesink", "audiosink");
@@ -198,10 +201,11 @@ gst_video_thumbnailer_get_shot (const gchar  *location,
         count++;
 
         /* Spin mainloop so we can pick up the cancels */
-        while (g_main_context_pending (NULL)) {
-            g_main_context_iteration (NULL, FALSE);
+        while (g_main_context_pending (context)) {
+            g_main_context_iteration (context, FALSE);
         }
     }
+
 
     if (g_cancellable_is_cancelled (cancellable)) {
         g_print ("Video %s was cancelled\n", uri);
@@ -245,7 +249,8 @@ gst_video_thumbnailer_get_shot (const gchar  *location,
                           NULL);
             if (frame == NULL) {
                 g_warning ("No frame for %s", uri);
-                return NULL;
+                shot = NULL;
+                goto finish;
             }
 
             shot = convert_buffer_to_pixbuf (frame, cancellable);
@@ -255,6 +260,11 @@ gst_video_thumbnailer_get_shot (const gchar  *location,
     gst_element_set_state (playbin, GST_STATE_NULL);
     g_object_unref (playbin);
     g_free (uri);
+
+ finish:
+
+    g_main_context_pop_thread_default (context);
+    g_main_context_unref (context);
 
     return shot;
 }
