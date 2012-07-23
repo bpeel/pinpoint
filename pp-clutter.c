@@ -238,7 +238,6 @@ static void pp_set_fullscreen_x11 (ClutterStage     *stage,
                                    gboolean          fullscreen)
 {
   static gboolean is_fullscreen = FALSE;
-  static float old_width=640, old_height=480;
 
   struct {
     unsigned long flags;
@@ -249,12 +248,10 @@ static void pp_set_fullscreen_x11 (ClutterStage     *stage,
   } MWMHints = { 2, 0, 0, 0, 0};
 
   Display *xdisplay = clutter_x11_get_default_display ();
-  int      xscreen  = clutter_x11_get_default_screen ();
   Atom     wm_hints = XInternAtom(xdisplay, "_MOTIF_WM_HINTS", True);
   Window   xwindow  = clutter_x11_get_stage_window (stage);
 
-  if (!pp_maximized)
-    return clutter_stage_set_fullscreen (stage, fullscreen);
+  clutter_stage_set_fullscreen (stage, fullscreen);
 
   pp_fullscreen = fullscreen;
   if (is_fullscreen == fullscreen)
@@ -263,19 +260,10 @@ static void pp_set_fullscreen_x11 (ClutterStage     *stage,
 
   if (fullscreen)
     {
-      int full_width = DisplayWidth (xdisplay, xscreen);
-      int full_height = DisplayHeight (xdisplay, xscreen)+5;
-        /* avoid being detected as fullscreen, workaround for some
-           windowmanagers  */
-      clutter_actor_get_size (CLUTTER_ACTOR (stage), &old_width, &old_height);
-
       if (wm_hints != None)
         XChangeProperty (xdisplay, xwindow, wm_hints, wm_hints, 32,
                          PropModeReplace, (guchar*)&MWMHints,
                          sizeof(MWMHints)/sizeof(long));
-      clutter_actor_set_size (CLUTTER_ACTOR (stage), full_width, full_height);
-      XMoveResizeWindow (xdisplay, xwindow,
-                         0, 0, full_width, full_height);
     }
   else
     {
@@ -284,8 +272,6 @@ static void pp_set_fullscreen_x11 (ClutterStage     *stage,
         XChangeProperty (xdisplay, xwindow, wm_hints, wm_hints, 32,
                          PropModeReplace, (guchar*)&MWMHints,
                          sizeof(MWMHints)/sizeof(long));
-      clutter_stage_set_fullscreen (stage, FALSE);
-      clutter_actor_set_size (CLUTTER_ACTOR (stage), old_width, old_height);
     }
 }
 
