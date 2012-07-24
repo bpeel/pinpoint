@@ -388,8 +388,8 @@ pp_get_text_position_scale (PinPointPoint *point,
   w = text_width;
   h = text_height;
 
-  sx = stage_width / w * 0.8;
-  sy = stage_height / h * 0.8;
+  sx = stage_width / w * 0.9;
+  sy = stage_height / h * 0.9;
 
   if (sy < sx)
     sx = sy;
