@@ -1169,10 +1169,6 @@ clutter_renderer_make_point (PinPointRenderer *pp_renderer,
                                            NULL);
       }
       break;
-    case PP_BG_IMAGE:
-      data->background = _clutter_get_texture (renderer, file);
-      ret = TRUE;
-      break;
     case PP_BG_VIDEO:
 #ifdef USE_CLUTTER_GST
       data->background = clutter_gst_video_texture_new ();
@@ -1211,7 +1207,12 @@ clutter_renderer_make_point (PinPointRenderer *pp_renderer,
           }
         ret = data->background != NULL;
       }
+      break;
 #endif
+      /* flow through (if no dax) */
+    case PP_BG_IMAGE:
+      data->background = _clutter_get_texture (renderer, file);
+      ret = TRUE;
       break;
     default:
       g_assert_not_reached();
