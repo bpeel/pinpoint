@@ -1464,10 +1464,12 @@ mouse_clicked (ClutterActor    *actor,
   {
     case 1: /* Left mouse button is clicked */
       printf ("1\n");
+      fflush (stdout);
       next_slide (renderer);
       break;
     case 3: /* Right mouse button is clicked */
       printf ("3\n");
+      fflush (stdout);
       prev_slide (renderer);
       break;
   }
