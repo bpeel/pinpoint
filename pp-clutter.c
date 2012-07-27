@@ -1463,9 +1463,11 @@ mouse_clicked (ClutterActor    *actor,
   switch (clutter_event_get_button(event))
   {
     case 1: /* Left mouse button is clicked */
+      printf ("1\n");
       next_slide (renderer);
       break;
     case 3: /* Right mouse button is clicked */
+      printf ("3\n");
       prev_slide (renderer);
       break;
   }
