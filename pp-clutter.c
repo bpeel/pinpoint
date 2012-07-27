@@ -1378,6 +1378,19 @@ key_pressed (ClutterActor    *actor,
              ClutterEvent    *event,
              ClutterRenderer *renderer)
 {
+  if (event)
+    switch (clutter_event_get_key_symbol (event))
+      {
+      case CLUTTER_Left:
+        printf ("3\n");
+        fflush (stdout);
+        break;
+      case CLUTTER_Right:
+        printf ("1\n");
+        fflush (stdout);
+        break;
+      }
+
   if (event) /* There is no event for the first triggering */
   switch (clutter_event_get_key_symbol (event))
     {
@@ -1463,13 +1476,9 @@ mouse_clicked (ClutterActor    *actor,
   switch (clutter_event_get_button(event))
   {
     case 1: /* Left mouse button is clicked */
-      printf ("1\n");
-      fflush (stdout);
       next_slide (renderer);
       break;
     case 3: /* Right mouse button is clicked */
-      printf ("3\n");
-      fflush (stdout);
       prev_slide (renderer);
       break;
   }
