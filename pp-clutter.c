@@ -1381,11 +1381,11 @@ key_pressed (ClutterActor    *actor,
   if (event)
     switch (clutter_event_get_key_symbol (event))
       {
-      case CLUTTER_Left:
+      case CLUTTER_Prior:
         printf ("3\n");
         fflush (stdout);
         break;
-      case CLUTTER_Right:
+      case CLUTTER_Next:
         printf ("1\n");
         fflush (stdout);
         break;
